@@ -25,16 +25,18 @@ parent = document.getElementById("firstHeading");
 divv = document.createElement("div");
 divv.classList.add("cv");
 res = document.getElementById("mw-content-text").innerHTML;
-resp = res.split(
-  /<span class="mw-headline" id="[^"]*登場人物[^"]*">[^>]*登場人物[^<]*<\/span>/
-)[1];
+resp = res.split(/<span class="mw-headline" id="登場人物">登場人物<\/span>/)[1];
 if (resp === undefined) {
   resp = res.split(
     '<span class="mw-headline" id="登場キャラクター">登場キャラクター</span>'
   )[1];
 }
+if (resp === undefined) {
+  resp = res.split(
+    /<span class="mw-headline" id="[^"]*登場人物">[^<]*登場人物<\/span>/
+  )[1];
+}
 resp = resp.split("</h2>")[1];
-
 resp = resp.split("<h2>")[0].replace(/\n/g, "");
 dtdd = resp.match(/<dt.*?\/dd>/g);
 dt = resp.match(/<dt>.*?<\/dt>/g);
@@ -46,14 +48,16 @@ for (let i = 0; i < dt.length; i++) {
   charlist.push(char);
 }
 for (let i = 0; i < dtdd.length; i++) {
-  dddd = dtdd[i].match(/ [:-] .*?<\/dd>/g);
+  dddd = dtdd[i].match(/声.*?[：:-].*?<\/dd>/g);
   try {
     divv.insertAdjacentHTML(
       "beforeend",
       "<strong>" +
         charlist[i] +
         "</strong>" +
+        " : " +
         dddd[0]
+          .split(/声.*?[：:-]/)[1]
           .replace(/<dt>/g, "<p>")
           .replace(/<\/dt>/g, "")
           .replace(/<dd>/g, "")
@@ -61,22 +65,6 @@ for (let i = 0; i < dtdd.length; i++) {
     );
     parent.appendChild(divv);
   } catch {
-    dddd = dtdd[i].match(/：.*?<\/dd>/g);
-    try {
-      divv.insertAdjacentHTML(
-        "beforeend",
-        "<strong>" +
-          charlist[i] +
-          "</strong>" +
-          dddd[0]
-            .replace(/<dt>/g, "<p>")
-            .replace(/<\/dt>/g, "")
-            .replace(/<dd>/g, "")
-            .replace(/<\/dd>/g, "</p>")
-      );
-      parent.appendChild(divv);
-    } catch {
-      continue;
-    }
+    continue;
   }
 }
