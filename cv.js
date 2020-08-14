@@ -61,16 +61,17 @@ for (let i = 0; i < dtdd.length; i++) {
   try {
     divv.insertAdjacentHTML(
       "beforeend",
-      "<strong>" +
+      "<div><strong>" +
         char +
         "</strong>" +
         " : " +
         dddd[0]
-          .split(/声.*?[：:-]/)[1]
-          .replace(/<dt>/g, "<p>")
+          .replace(/声.*?[：:-]/, "")
+          .replace(/<dt>/g, "")
           .replace(/<\/dt>/g, "")
           .replace(/<dd>/g, "")
-          .replace(/<\/dd>/g, "</p>")
+          .replace(/<\/dd>/g, "") +
+        "</div>"
     );
     parent.appendChild(divv);
   } catch {
